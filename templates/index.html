@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplex Solver</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Simplex Solver</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <form action="/solve" method="post" enctype="multipart/form-data" class="mb-4">
+                    <div class="form-group">
+                        <label for="file">Upload LP problem file:</label>
+                        <input type="file" id="file" name="file" class="form-control-file" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Solve</button>
+                </form>
+                <h2 class="text-center">Or Enter LP Problem Manually</h2>
+                <form action="/solve-manual" method="post" id="manual-entry-form">
+                    <div class="form-group">
+                        <label for="m">Number of constraints (m):</label>
+                        <input type="number" id="m" name="m" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="n">Number of variables (n):</label>
+                        <input type="number" id="n" name="n" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objective-coefficients">Objective function coefficients:</label>
+                        <input type="text" id="objective-coefficients" name="objective-coefficients" class="form-control" placeholder="e.g., 3 2 0" required>
+                    </div>
+                    <div id="constraints" class="mb-3"></div>
+                    <button type="submit" class="btn btn-success">Solve</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('m').addEventListener('input', function() {
+            const constraintCount = parseInt(this.value);
+            const constraintsDiv = document.getElementById('constraints');
+            constraintsDiv.innerHTML = ''; // Clear existing constraints
+            for (let i = 0; i < constraintCount; i++) {
+                const constraintDiv = document.createElement('div');
+                constraintDiv.classList.add('form-group');
+                constraintDiv.innerHTML = `
+                    <label for="constraint-coefficients-${i+1}">Constraint ${i+1} coefficients:</label>
+                    <input type="text" id="constraint-coefficients-${i+1}" name="constraint-coefficients-${i+1}" class="form-control" placeholder="e.g., 1 1 4" required>
+                `;
+                constraintsDiv.appendChild(constraintDiv);
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

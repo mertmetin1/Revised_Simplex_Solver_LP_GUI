@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplex Solver Results</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.1rem;
+        }
+        .list-group-item {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Simplex Solver Results</h1>
+        <p class="text-center">Initial Basic Feasible Solution (BFS): {{ initial_values }}</p>
+        <div>
+            {% for solution in solutions %}
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Iteration {{ solution.iteration_number }}</h2>
+                        <p class="card-text">{{ solution.objective_function }}</p>
+                        <p class="card-text"><strong>Variables:</strong></p>
+                        <ul class="list-group list-group-flush">
+                            {% for var in solution.variables %}
+                                <li class="list-group-item">{{ var }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p class="card-text mt-3"><strong>Constraints:</strong></p>
+                        <ul class="list-group list-group-flush">
+                            {% for con in solution.constraints %}
+                                <li class="list-group-item">{{ con }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
