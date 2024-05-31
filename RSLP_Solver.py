@@ -6,8 +6,9 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 class SimplexSolver:
-    def __init__(self, filepath=None):
+    def __init__(self, filepath=None, objective='max'):
         self.filepath = filepath
+        self.objective = objective
         if filepath:
             self.read_file()
             self.parse_data()
@@ -22,6 +23,8 @@ class SimplexSolver:
         self.m = int(lines[0].split()[0])
         self.n = int(lines[0].split()[1])
         self.c = np.array(list(map(float, lines[1].split())) + [0] * self.m)
+        if self.objective == 'min':
+            self.c = -self.c
         self.A = []
         self.b = []
         for line in lines[2:]:
@@ -119,17 +122,7 @@ class SimplexSolver:
         print(f"N_idx after pivoting: {self.N_idx}")
         print(f"B_idx after pivoting: {self.B_idx}")
 
-    def get_iteration_solution(self):
-        iteration_solution = {
-            "type": "iteration",
-            "iteration_number": self.a,
-            "variables": [{"x{}".format(self.N_idx[i]): self.current_sol[i + 1]} for i in range(len(self.N))],
-            "constraints": [{"x{}".format(self.B_idx[i]): self.current_sol[i + 1]} for i in range(len(self.B))],
-            "objective_function": "z = {} ".format(self.current_sol[0]) + " + ".join(
-                ["({:.2f})x{}".format(-self.c[i], self.N_idx[i]) for i in range(len(self.N_idx))]
-            ),
-        }
-        return iteration_solution
+
 
     def get_optimal_solution(self):
         optimal_solution = {
@@ -157,39 +150,22 @@ class SimplexSolver:
         }
         return unbounded_solution
 
+
+    def get_iteration_solution(self):
+        iteration_solution = {
+            "type": "iteration",
+            "iteration_number": self.a,
+            "variables": [{"x{}".format(self.N_idx[i]): self.current_sol[i + 1]} for i in range(len(self.N))],
+            "constraints": [{"x{}".format(self.B_idx[i]): self.current_sol[i + 1]} for i in range(len(self.B))],
+            "objective_function": "z = {} ".format(self.current_sol[0]) + " + ".join(
+                ["({:.2f})x{}".format(-self.c[i], self.N_idx[i]) for i in range(len(self.N_idx))]
+            ),
+        }
+        return iteration_solution
+
     def get_solution_output(self):
-        output = ""
-        output += ">>>>>>>>>> giriş <<<<<<<<<<<\n"
-        output += "{} {}\n".format(self.m, self.n)
-        output += "{}\n".format(" ".join(map(str, self.c)))
-        output += "{}\n".format(" ".join(map(str, self.b)))
-        output += "A =\n{}\n".format(self.A)
-        output += "x = { " + " ".join(["x{}".format(i) for i in range(1, self.n + 1)]) + " }\n"
-        output += "N = { " + " ".join(["x{}".format(i) for i in self.N_idx]) + " }\n"
-        output += "B = { " + " ".join(["x{}".format(i) for i in self.B_idx]) + " }\n"
-        for i, solution in enumerate(self.iteration_solutions):
-            output += "{}.döngü\n".format(i + 1)
-            output += "cbar     {}\n".format(" ".join(["x{}:{}".format(self.N_idx[j], solution['cbar'][j]) for j in range(len(self.N_idx))]))
-            output += "Giren değişken x{}\n".format(solution['entering_variable_idx'])
-            output += "abarj = {}\n".format(solution['abarj'])
-            output += "Oran {}\n".format(" ".join(["x{}:{:.4f}".format(self.N_idx[j], solution['ratio'][j]) for j in range(len(self.N_idx))]))
-            output += "Ayrılan değişken x{}\n".format(solution['leaving_variable_idx'])
-            output += "{}\n".format(solution['E'])
-            output += "N = { " + " ".join(["x{}".format(i) for i in self.N_idx]) + " }\n"
-            output += "B = { " + " ".join(["x{}".format(i) for i in self.B_idx]) + " }\n"
-            output += "bbar = {}\n".format(solution['bbar'])
-            output += "#################################################################################\n"
-        solution = self.iteration_solutions[-1]
-        output += "{}.döngü\n".format(len(self.iteration_solutions) + 1)
-        output += "y = {}\n".format(" ".join(map(str, self.y)))
-        output += "cbar     {}\n".format(" ".join(["x{}:{}".format(self.N_idx[j], solution['cbar'][j]) for j in range(len(self.N_idx))]))
-        output += "Optimal Çözüm\n"
-        output += "Döngü sayısı:{}\n".format(len(self.iteration_solutions))
-        output += "Optimal değer {:.15f} ulaşıldı.\n".format(solution['optimal_value'])
-        output += "Değişkenler:\n"
-        output += "{}\n".format("\n".join(["x{} = {:.2f}".format(self.N_idx[i], self.current_sol[i + 1]) for i in range(len(self.N_idx))]))
-        output += "Sınırlayıcılar:\n"
-        output += "{}\n".format("\n".join(["x{} = {:.2f}".format(self.B_idx[i], self.current_sol[self.n + 1 + i]) for i in range(len(self.B_idx))]))
-        output += "Amaç Fonksiyonu:\n"
-        output += "{}\n".format(solution['objective_function'])
+        output = {
+            "iterations": self.iteration_solutions,
+            "final_solution": self.iteration_solutions[-1] if self.iteration_solutions else {}
+        }
         return output

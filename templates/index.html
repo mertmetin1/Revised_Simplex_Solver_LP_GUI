@@ -16,6 +16,13 @@
                         <label for="file">Upload LP problem file:</label>
                         <input type="file" id="file" name="file" class="form-control-file" required>
                     </div>
+                    <div class="form-group">
+                        <label for="objective">Objective:</label>
+                        <select id="objective" name="objective" class="form-control" required>
+                            <option value="max">Maximize</option>
+                            <option value="min">Minimize</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Solve</button>
                 </form>
                 <h2 class="text-center">Or Enter LP Problem Manually</h2>
@@ -31,6 +38,13 @@
                     <div class="form-group">
                         <label for="objective-coefficients">Objective function coefficients:</label>
                         <input type="text" id="objective-coefficients" name="objective-coefficients" class="form-control" placeholder="e.g., 3 2 0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objective">Objective:</label>
+                        <select id="objective" name="objective" class="form-control" required>
+                            <option value="max">Maximize</option>
+                            <option value="min">Minimize</option>
+                        </select>
                     </div>
                     <div id="constraints" class="mb-3"></div>
                     <button type="submit" class="btn btn-success">Solve</button>
