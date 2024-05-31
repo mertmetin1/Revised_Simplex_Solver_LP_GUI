@@ -49,3 +49,12 @@ To use the Simplex solver:
 
 Feel free to contribute by submitting bug reports, feature requests, or pull requests.
 
+
+### index.html:
+![Screenshot from 2024-05-31 16-09-32](https://github.com/mertmetin1/Revised_Simplex_Solver_LP_GUI/assets/98667673/49f52eed-3618-450b-9938-3b2d7fd06338)
+
+
+### result.html:
+![Screenshot from 2024-05-31 16-09-52](https://github.com/mertmetin1/Revised_Simplex_Solver_LP_GUI/assets/98667673/b8d0f892-6173-4d56-9706-b7c2efebafa7)
+![Screenshot from 2024-05-31 16-09-59](https://github.com/mertmetin1/Revised_Simplex_Solver_LP_GUI/assets/98667673/49ad17c3-2e45-4c5a-9c15-c2319ca3ac98)
+
