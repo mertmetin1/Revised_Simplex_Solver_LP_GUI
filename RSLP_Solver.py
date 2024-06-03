@@ -9,6 +9,8 @@ class SimplexSolver:
     def __init__(self, filepath=None, objective='max'):
         self.filepath = filepath
         self.objective = objective
+        self.entering_variable = None
+        self.leaving_variable = None  # Add this line
         if filepath:
             self.read_file()
             self.parse_data()
@@ -71,6 +73,7 @@ class SimplexSolver:
             self.perform_pivoting(t, p)
             self.a += 1
             self.iteration_solutions.append(self.get_iteration_solution())
+            
         return self.iteration_solutions
 
     def compute_entering_variable_candidates(self):
@@ -86,8 +89,15 @@ class SimplexSolver:
         idx_of_positive_values = np.array(np.where(t > 0)).reshape((-1, 1))
         ratio = self.xb[idx_of_positive_values] / t[idx_of_positive_values]
         leaving_var_idx = idx_of_positive_values[np.argmin(ratio)]
+        
+        
+        self.entering_variable = p  # Update entering variable index
+        # Determine leaving variable index and update it
+        positive_values = t[t > 0]
+        idx_of_positive_values = np.array(np.where(t > 0)).reshape((-1, 1))
+        ratio = self.xb[idx_of_positive_values] / t[idx_of_positive_values]
+        self.leaving_variable = idx_of_positive_values[np.argmin(ratio)].item()
         q = int(leaving_var_idx)
-
         # Debug statements to track the pivoting process
         print(f"Entering variable index: {p}")
         print(f"Leaving variable index: {q}")
@@ -160,8 +170,11 @@ class SimplexSolver:
             "objective_function": "z = {} ".format(self.current_sol[0]) + " + ".join(
                 ["({:.2f})x{}".format(-self.c[i], self.N_idx[i]) for i in range(len(self.N_idx))]
             ),
+            "entering_variable": "x{}".format(self.N_idx[self.entering_variable]),  # Use entering_variable index
+            "leaving_variable": "x{}".format(self.B_idx[self.leaving_variable])  # Use leaving_variable index
         }
         return iteration_solution
+
 
     def get_solution_output(self):
         output = {

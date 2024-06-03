@@ -39,14 +39,16 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Simplex Solver Results</h1>
+        <h1 class="text-center">Revised Simplex Solver Results</h1>
         <div class="card mt-4">
             <div class="card-body">
                 <h2>Iterations</h2>
-                {% for iteration in solution.iterations %}
+                {% for iteration in solution.iterations[:-1] %}
                 <div class="mt-3">
-                    <h4>Iteration {{ iteration.iteration_number }}</h4>
+                    <h4>Iteration {{ iteration.iteration_number-1 }}</h4>
                     <p><strong>Objective Function:</strong> {{ iteration.objective_function }}</p>
+                    <p><strong>Entering Variable:</strong> {{ iteration.entering_variable }}</p>
+                    <p><strong>Leaving Variable:</strong> {{ iteration.leaving_variable }}</p>
                     <p><strong>Variables:</strong></p>
                     <ul class="list-group">
                         {% for var in iteration.variables %}
@@ -59,10 +61,12 @@
                         <li class="list-group-item">{{ constraint }}</li>
                         {% endfor %}
                     </ul>
+
                 </div>
                 <hr>
                 {% endfor %}
                 <h2>Final Solution</h2>
+                
                 <table class="table">
                     <thead>
                         <tr>
